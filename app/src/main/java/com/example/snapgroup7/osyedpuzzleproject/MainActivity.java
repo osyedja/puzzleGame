@@ -1,5 +1,6 @@
 package com.example.snapgroup7.osyedpuzzleproject;
 
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
@@ -51,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-        int[] ar = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 };
+        int[] ar = { -1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ,1 };
         shuffleArray(ar);
         for (int i = 0;i<ar.length;i++){
             Log.i("hey", String.valueOf(ar[i]));
@@ -60,11 +61,13 @@ public class MainActivity extends AppCompatActivity {
         int count = 0;
         for (int i =0;i<4;i++)
             for (int j=0;j<4;j++){
-                Log.i("count",String.valueOf(ar[count]));
-                txArr[i][j].setText(ar[count]);
+                Log.i("count",String.valueOf(count));
+                txArr[i][j].setText(String.valueOf(ar[count]));
                 count++;
                 if(txArr[i][j].getText().equals("-1")){
-                    txArr[i][j].setVisibility(View.GONE);
+                    String temp = txArr[3][3].getText().toString();
+                    Log.i("innteger",String.valueOf(temp));
+                    txArr[3][3].setText("");
                 }
 
             }
@@ -75,8 +78,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void insertToGame(int[]ar){
+    private boolean checkTheGame(){
 
+        for (int i =0;i<4;i++)
+            for (int j=0;j<4;j++){
+                if(txArr[i][j].getTag().toString() != txArr[i][j].getText().toString())
+                    return false;
+            }
+        return true;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -94,14 +103,223 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public boolean checkUp(int i , int j){
+        if(txArr[i-1][j].getText().equals(""))
+            return true;
+        return false;
+    }
+
+    public boolean checkDown(int i , int j){
+        if(txArr[i+1][j].getText().equals(""))
+            return true;
+        return false;
+    }
+
+    public boolean checkRight(int i , int j){
+        if(txArr[i][j+1].getText().equals(""))
+            return true;
+        return false;
+    }
+
+    public boolean checkLeft(int i , int j){
+        if(txArr[i][j-1].getText().equals(""))
+            return true;
+        return false;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////
+
+
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
+    public void swap(int i , int j , int Si , int Sj){
+        String temp = txArr[i][j].getText().toString();
+        Drawable bTemp = txArr[i] [j].getBackground();
+        txArr[i][j].setText("");
+        txArr[i][j].setBackground(txArr[i + Si] [j + Sj].getBackground());
+        txArr[i + Si] [j + Sj].setText(temp);
+        txArr[i + Si] [j + Sj].setBackground(bTemp);
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
     public void move(View view) {
         if(view.getTag().equals("12")){
-            String temp = tx12.getText().toString();
-            tx12.setText(tx16.getText());
-            tx16.setText(temp);
+           int i =2;
+           int j =3;
+           if(checkLeft(i,j))
+               swap(i,j,0,-1);
+           if(checkUp(i,j))
+               swap(i,j,-1,0);
+            if(checkDown(i,j))
+                swap(i,j,1,0);
         }
-        else{
-            Toast.makeText(this,"nooo",Toast.LENGTH_SHORT).show();
+        if(view.getTag().equals("8")){
+            int i =1;
+            int j =3;
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+            if(checkDown(i,j))
+                swap(i,j,1,0);
         }
+        if(view.getTag().equals("16")){
+            int i =3;
+            int j =3;
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+        }
+        if(view.getTag().equals("4")){
+            int i =0;
+            int j =3;
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+        }
+        if(view.getTag().equals("3")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =0;
+            int j =2;
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+        }
+        if(view.getTag().equals("2")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =0;
+            int j =1;
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+        }
+        if(view.getTag().equals("1")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =0;
+            int j =0;
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+        }
+        if(view.getTag().equals("5")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =1;
+            int j =0;
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+        }
+        if(view.getTag().equals("6")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =1;
+            int j =1;
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+        }
+        if(view.getTag().equals("7")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =1;
+            int j =2;
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+        }
+        if(view.getTag().equals("9")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =2;
+            int j =0;
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+        }
+        if(view.getTag().equals("10")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =2;
+            int j =1;
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+        }
+        if(view.getTag().equals("11")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =2;
+            int j =2;
+            if(checkDown(i,j))
+                swap(i,j,1,0);
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+        }
+        if(view.getTag().equals("13")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =3;
+            int j =0;
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+        }
+        if(view.getTag().equals("14")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =3;
+            int j =1;
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+        }
+        if(view.getTag().equals("15")){
+            Log.i("target",txArr[0][2].getText().toString());
+            int i =3;
+            int j =2;
+            if(checkRight(i,j))
+                swap(i,j,0,1);
+            if(checkUp(i,j))
+                swap(i,j,-1,0);
+            if(checkLeft(i,j))
+                swap(i,j,0,-1);
+        }
+
+        if(checkTheGame())
+            Toast.makeText(this,"success",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"next step",Toast.LENGTH_SHORT).show();
+
+
     }
 }
